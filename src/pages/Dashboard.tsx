@@ -117,13 +117,23 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
 
-          {/* Settings */}
-          <div className="bg-slate-800 rounded-2xl p-6 shadow-lg">
-            <div className="text-4xl mb-4">⚙️</div>
-            <h3 className="text-xl font-bold text-white mb-2">Settings</h3>
-            <p className="text-gray-400 text-sm mb-4">Manage your profile, preferences, and account settings.</p>
-            <button disabled className="w-full bg-slate-700 text-gray-300 font-semibold py-2 rounded-lg opacity-50 cursor-not-allowed">
-              Coming Soon
+          {/* Subscription */}
+          <div className="bg-slate-800 rounded-2xl p-6 shadow-lg hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/subscription')}>
+            <div className="text-4xl mb-4">💳</div>
+            <h3 className="text-xl font-bold text-white mb-2">Subscription</h3>
+            <p className="text-gray-400 text-sm mb-4">Manage your subscription and billing.</p>
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors">
+              Manage
+            </button>
+          </div>
+
+          {/* Pricing */}
+          <div className="bg-slate-800 rounded-2xl p-6 shadow-lg hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/pricing')}>
+            <div className="text-4xl mb-4">💰</div>
+            <h3 className="text-xl font-bold text-white mb-2">Pricing</h3>
+            <p className="text-gray-400 text-sm mb-4">View our subscription plans.</p>
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors">
+              View Plans
             </button>
           </div>
         </div>

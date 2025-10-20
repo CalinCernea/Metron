@@ -24,6 +24,8 @@ import NutritionPlan from './pages/NutritionPlan'
 import WorkoutPlan from './pages/WorkoutPlan'
 import FoodDiary from './pages/FoodDiary'
 import ProgressTracker from './pages/ProgressTracker'
+import Pricing from './pages/Pricing'
+import SubscriptionManagement from './pages/SubscriptionManagement'
 
 function App() {
   return (
@@ -147,6 +149,18 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ProgressTracker />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pricing"
+              element={<Pricing />}
+            />
+            <Route
+              path="/subscription"
+              element={
+                <ProtectedRoute>
+                  <SubscriptionManagement />
                 </ProtectedRoute>
               }
             />
