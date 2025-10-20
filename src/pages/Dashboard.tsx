@@ -78,7 +78,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Workout Plan Card */}
-          <div className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-2xl p-8 shadow-lg">
+          <div className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow cursor-pointer" onClick={() => navigate('/workout-plan')}>
             <div className="flex items-start justify-between mb-6">
               <div>
                 <h2 className="text-3xl font-bold text-white mb-2">Workout Plan</h2>
@@ -87,10 +87,10 @@ const Dashboard: React.FC = () => {
               <span className="text-5xl">🏋️</span>
             </div>
             <div className="bg-orange-500 bg-opacity-30 rounded-lg p-4 mb-4">
-              <p className="text-orange-100 text-sm">Your personalized workout plan is being generated. It will adapt based on your progress and feedback.</p>
+              <p className="text-orange-100 text-sm">Your personalized workout plan has been generated. Click to view your weekly schedule and exercise details.</p>
             </div>
-            <button disabled className="w-full bg-white text-orange-600 font-semibold py-2 rounded-lg opacity-50 cursor-not-allowed">
-              Coming Soon
+            <button className="w-full bg-white text-orange-600 font-semibold py-2 rounded-lg hover:bg-orange-50 transition-colors">
+              View Plan
             </button>
           </div>
         </div>
