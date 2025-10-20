@@ -1,0 +1,14 @@
+{
+  "project_id": "yzumnsjozljmlnebhozi",
+  "functions": [
+    {
+      "slug": "create-checkout-session",
+      "importmap_path": "functions/_shared/import_map.json"
+    },
+    {
+      "slug": "stripe-webhook",
+      "importmap_path": "functions/_shared/import_map.json"
+    }
+  ]
+}
+

@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { SUBSCRIPTION_PLANS, TRIAL_DAYS, formatPrice } from '../lib/subscriptionPlans'
+import { createCheckoutSession } from '../lib/stripeCheckout'
 
 const Pricing: React.FC = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSelectPlan = async (planId: string) => {
     if (!user) {
@@ -17,23 +19,30 @@ const Pricing: React.FC = () => {
 
     setSelectedPlan(planId)
     setLoading(true)
+    setError('')
 
-    // In a real app, this would create a Stripe checkout session
-    // For now, we'll simulate the trial period
     try {
-      // Simulate API call to create subscription
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const plan = SUBSCRIPTION_PLANS.find((p) => p.id === planId)
+      if (!plan) {
+        throw new Error('Plan not found')
+      }
 
-      // In production, you would:
-      // 1. Call your backend to create a Stripe checkout session
-      // 2. Redirect to Stripe Checkout
-      // 3. After payment, create the subscription in Supabase
+      // Get current URL for success/cancel redirects
+      const baseUrl = window.location.origin
+      const successUrl = `${baseUrl}/subscription?success=true`
+      const cancelUrl = `${baseUrl}/pricing`
 
-      // For demo purposes, we'll just show a message
-      alert(`Redirecting to payment for ${planId} plan...`)
-      setLoading(false)
+      // Create Stripe checkout session
+      await createCheckoutSession({
+        priceId: plan.stripePriceId,
+        userId: user.id,
+        email: user.email || '',
+        successUrl,
+        cancelUrl,
+      })
     } catch (err) {
       console.error('Error:', err)
+      setError('Failed to start checkout. Please try again.')
       setLoading(false)
     }
   }
@@ -68,6 +77,13 @@ const Pricing: React.FC = () => {
           <div className="inline-block bg-green-600 bg-opacity-20 border border-green-500 rounded-full px-6 py-2 mb-8">
             <p className="text-green-400 font-semibold">✓ Free {TRIAL_DAYS}-Day Trial</p>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mt-4 p-4 bg-red-600 bg-opacity-20 border border-red-500 rounded-lg text-red-400">
+              {error}
+            </div>
+          )}
         </div>
 
         {/* Pricing Cards */}
@@ -192,7 +208,7 @@ const Pricing: React.FC = () => {
         <div className="mt-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 text-center">
           <h3 className="text-2xl font-bold text-white mb-4">100% Satisfaction Guarantee</h3>
           <p className="text-blue-100 mb-6">
-            Try Metron free for 7 days. If you\'re not satisfied, cancel anytime with no questions asked.
+            Try Metron free for 7 days. If you're not satisfied, cancel anytime with no questions asked.
           </p>
           <div className="flex justify-center gap-4">
             <svg className="h-6 w-6 text-blue-200" fill="currentColor" viewBox="0 0 20 20">

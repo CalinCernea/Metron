@@ -28,7 +28,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     id: 'premium',
     name: 'Premium',
     price: 9.99,
-    stripePriceId: 'price_premium_monthly', // Replace with actual Stripe price ID
+    stripePriceId: 'price_1SKIyJHNlNFnkDkWVoo83FNs',
     description: 'Perfect for serious fitness enthusiasts',
     features: [
       'Personalized nutrition plans',
@@ -46,7 +46,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     id: 'pro',
     name: 'Pro',
     price: 19.99,
-    stripePriceId: 'price_pro_monthly', // Replace with actual Stripe price ID
+    stripePriceId: 'price_1SKIzhHNlNFnkDkWAnR5BQhD',
     description: 'For athletes and fitness professionals',
     features: [
       'Everything in Premium',
