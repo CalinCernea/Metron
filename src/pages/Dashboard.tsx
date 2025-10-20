@@ -98,22 +98,22 @@ const Dashboard: React.FC = () => {
         {/* Additional Features */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Progress Tracking */}
-          <div className="bg-slate-800 rounded-2xl p-6 shadow-lg">
+          <div className="bg-slate-800 rounded-2xl p-6 shadow-lg hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/progress-tracker')}>
             <div className="text-4xl mb-4">📊</div>
             <h3 className="text-xl font-bold text-white mb-2">Progress Tracking</h3>
             <p className="text-gray-400 text-sm mb-4">Monitor your weight, measurements, and progress photos.</p>
-            <button disabled className="w-full bg-slate-700 text-gray-300 font-semibold py-2 rounded-lg opacity-50 cursor-not-allowed">
-              Coming Soon
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors">
+              View Progress
             </button>
           </div>
 
           {/* Food Diary */}
-          <div className="bg-slate-800 rounded-2xl p-6 shadow-lg">
+          <div className="bg-slate-800 rounded-2xl p-6 shadow-lg hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/food-diary')}>
             <div className="text-4xl mb-4">📝</div>
             <h3 className="text-xl font-bold text-white mb-2">Food Diary</h3>
             <p className="text-gray-400 text-sm mb-4">Log your meals and track daily nutrition intake.</p>
-            <button disabled className="w-full bg-slate-700 text-gray-300 font-semibold py-2 rounded-lg opacity-50 cursor-not-allowed">
-              Coming Soon
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors">
+              Open Diary
             </button>
           </div>
 

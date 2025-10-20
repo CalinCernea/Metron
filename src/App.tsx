@@ -22,6 +22,8 @@ import Summary from './pages/onboarding/Summary'
 import Dashboard from './pages/Dashboard'
 import NutritionPlan from './pages/NutritionPlan'
 import WorkoutPlan from './pages/WorkoutPlan'
+import FoodDiary from './pages/FoodDiary'
+import ProgressTracker from './pages/ProgressTracker'
 
 function App() {
   return (
@@ -129,6 +131,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <WorkoutPlan />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/food-diary"
+              element={
+                <ProtectedRoute>
+                  <FoodDiary />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/progress-tracker"
+              element={
+                <ProtectedRoute>
+                  <ProgressTracker />
                 </ProtectedRoute>
               }
             />
