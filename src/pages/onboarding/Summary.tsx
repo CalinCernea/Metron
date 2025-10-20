@@ -1,20 +1,66 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useOnboarding } from '../../context/OnboardingContext'
+import { useAuth } from '../../context/AuthContext'
+import { supabase } from '../../lib/supabase'
 
 const Summary: React.FC = () => {
   const navigate = useNavigate()
   const { data } = useOnboarding()
+  const { user } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
   const handleComplete = async () => {
+    if (!user) {
+      setError('You must be logged in to save your profile')
+      return
+    }
+
     setIsLoading(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    // In a real app, you would save this data to Supabase
-    navigate('/dashboard')
+    setError('')
+
+    try {
+      // Save onboarding data to Supabase
+      const { error: insertError } = await supabase.from('onboarding_data').insert([
+        {
+          user_id: user.id,
+          name: data.name,
+          age: data.age,
+          sex: data.sex,
+          height: data.height,
+          weight: data.weight,
+          date_of_birth: data.dateOfBirth,
+          activity_level: data.activityLevel,
+          goals: data.goals,
+          experience: data.experience,
+          training_days: data.trainingDays,
+          session_duration: data.sessionDuration,
+          training_location: data.trainingLocation,
+          muscle_groups: data.muscleGroups,
+          allergies: data.allergies,
+          dietary_preferences: data.dietaryPreferences,
+          weekly_progress_goal: data.weeklyProgressGoal,
+          progress_amount: data.progressAmount,
+        },
+      ])
+
+      if (insertError) {
+        console.error('Error saving onboarding data:', insertError)
+        setError('Failed to save your profile. Please try again.')
+        setIsLoading(false)
+        return
+      }
+
+      // Navigate to dashboard
+      navigate('/dashboard')
+    } catch (err) {
+      console.error('Error:', err)
+      setError('An unexpected error occurred')
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -188,6 +234,13 @@ const Summary: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-500 bg-opacity-10 border border-red-500 text-red-400 px-4 py-3 rounded-lg text-sm mb-8">
+            {error}
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="flex gap-4">

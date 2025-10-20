@@ -1,5 +1,13 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { OnboardingProvider } from './context/OnboardingContext'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+
+// Auth Pages
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+
+// Onboarding Pages
 import Welcome from './pages/onboarding/Welcome'
 import PersonalInfo from './pages/onboarding/PersonalInfo'
 import ActivityLevel from './pages/onboarding/ActivityLevel'
@@ -9,29 +17,110 @@ import MuscleGroups from './pages/onboarding/MuscleGroups'
 import DietaryRestrictions from './pages/onboarding/DietaryRestrictions'
 import ProgressScale from './pages/onboarding/ProgressScale'
 import Summary from './pages/onboarding/Summary'
+
+// Main App Pages
 import Dashboard from './pages/Dashboard'
 
 function App() {
   return (
-    <OnboardingProvider>
-      <Router>
-        <Routes>
-          {/* Onboarding Routes */}
-          <Route path="/" element={<Welcome />} />
-          <Route path="/onboarding/personal-info" element={<PersonalInfo />} />
-          <Route path="/onboarding/activity-level" element={<ActivityLevel />} />
-          <Route path="/onboarding/fitness-goals" element={<FitnessGoals />} />
-          <Route path="/onboarding/training-preferences" element={<TrainingPreferences />} />
-          <Route path="/onboarding/muscle-groups" element={<MuscleGroups />} />
-          <Route path="/onboarding/dietary-restrictions" element={<DietaryRestrictions />} />
-          <Route path="/onboarding/progress-scale" element={<ProgressScale />} />
-          <Route path="/onboarding/summary" element={<Summary />} />
+    <AuthProvider>
+      <OnboardingProvider>
+        <Router>
+          <Routes>
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
 
-          {/* Main App Routes */}
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </Router>
-    </OnboardingProvider>
+            {/* Onboarding Routes (Protected) */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Welcome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding/personal-info"
+              element={
+                <ProtectedRoute>
+                  <PersonalInfo />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding/activity-level"
+              element={
+                <ProtectedRoute>
+                  <ActivityLevel />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding/fitness-goals"
+              element={
+                <ProtectedRoute>
+                  <FitnessGoals />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding/training-preferences"
+              element={
+                <ProtectedRoute>
+                  <TrainingPreferences />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding/muscle-groups"
+              element={
+                <ProtectedRoute>
+                  <MuscleGroups />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding/dietary-restrictions"
+              element={
+                <ProtectedRoute>
+                  <DietaryRestrictions />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding/progress-scale"
+              element={
+                <ProtectedRoute>
+                  <ProgressScale />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding/summary"
+              element={
+                <ProtectedRoute>
+                  <Summary />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Main App Routes (Protected) */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Catch all - redirect to login */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Router>
+      </OnboardingProvider>
+    </AuthProvider>
   )
 }
 
