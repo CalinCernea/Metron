@@ -20,6 +20,7 @@ import Summary from './pages/onboarding/Summary'
 
 // Main App Pages
 import Dashboard from './pages/Dashboard'
+import NutritionPlan from './pages/NutritionPlan'
 
 function App() {
   return (
@@ -111,6 +112,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/nutrition-plan"
+              element={
+                <ProtectedRoute>
+                  <NutritionPlan />
                 </ProtectedRoute>
               }
             />
