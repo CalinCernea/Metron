@@ -20,7 +20,7 @@ import Summary from './pages/onboarding/Summary'
 
 // Main App Pages
 import Dashboard from './pages/Dashboard'
-import NutritionPlan from './pages/NutritionPlan'
+import NutritionPlanPage from './pages/NutritionPlan'
 import WorkoutPlan from './pages/WorkoutPlan'
 import FoodDiary from './pages/FoodDiary'
 import ProgressTracker from './pages/ProgressTracker'
@@ -124,7 +124,7 @@ function App() {
               path="/nutrition-plan"
               element={
                 <ProtectedRoute>
-                  <NutritionPlan />
+                  <NutritionPlanPage />
                 </ProtectedRoute>
               }
             />

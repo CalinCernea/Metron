@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase'
 import { generateNutritionPlan, calculateMacroPercentages, NutritionPlan } from '../lib/nutritionCalculator'
 import { OnboardingData } from '../context/OnboardingContext'
 
-const NutritionPlan: React.FC = () => {
+const NutritionPlanPage: React.FC = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [nutritionPlan, setNutritionPlan] = useState<NutritionPlan | null>(null)
@@ -301,5 +301,5 @@ const NutritionPlan: React.FC = () => {
   )
 }
 
-export default NutritionPlan
+export default NutritionPlanPage
 
