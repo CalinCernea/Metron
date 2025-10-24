@@ -18,12 +18,12 @@ const PersonalInfo: React.FC = () => {
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {}
 
-    if (!data.name.trim()) newErrors.name = 'Name is required'
-    if (!data.age || data.age < 13 || data.age > 120) newErrors.age = 'Please enter a valid age (13-120)'
-    if (!data.sex) newErrors.sex = 'Please select your sex'
-    if (!data.height || data.height < 100 || data.height > 250) newErrors.height = 'Please enter a valid height (100-250 cm)'
-    if (!data.weight || data.weight < 30 || data.weight > 300) newErrors.weight = 'Please enter a valid weight (30-300 kg)'
-    if (!data.dateOfBirth) newErrors.dateOfBirth = 'Date of birth is required'
+    if (!data.name.trim()) newErrors.name = 'Full Name is required.'
+    if (!data.age || data.age < 13 || data.age > 120) newErrors.age = 'Age must be between 13 and 120.'
+    if (!data.sex) newErrors.sex = 'Please select your sex.'
+    if (!data.height || data.height < 100 || data.height > 250) newErrors.height = 'Height must be between 100 and 250 cm.'
+    if (!data.weight || data.weight < 30 || data.weight > 300) newErrors.weight = 'Weight must be between 30 and 300 kg.'
+    if (!data.dateOfBirth) newErrors.dateOfBirth = 'Date of birth is required.'
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -35,14 +35,20 @@ const PersonalInfo: React.FC = () => {
     }
   }
 
+  const inputClass = (field: string) =>
+    `w-full px-4 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
+      errors[field] ? 'border-red-500' : 'border-gray-600'
+    }`
+
   return (
     <OnboardingLayout
       step={1}
       totalSteps={7}
-      title="Personal Information"
-      subtitle="Let's start with your basic information"
+      title="Your Personal Details"
+      subtitle="Let's start by gathering your basic information to tailor your plan."
       onNext={handleNext}
       onBack={() => navigate('/')}
+      isNextDisabled={!data.name || !data.age || !data.sex || !data.height || !data.weight || !data.dateOfBirth}
     >
       <div className="space-y-6">
         {/* Name */}
@@ -55,14 +61,12 @@ const PersonalInfo: React.FC = () => {
             value={data.name}
             onChange={(e) => handleChange('name', e.target.value)}
             placeholder="John Doe"
-            className={`w-full px-4 py-3 bg-slate-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-              errors.name ? 'border-red-500' : 'border-slate-600'
-            }`}
+            className={inputClass('name')}
           />
           {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name}</p>}
         </div>
 
-        {/* Age */}
+        {/* Age & Sex */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-200 mb-2">
@@ -73,9 +77,7 @@ const PersonalInfo: React.FC = () => {
               value={data.age}
               onChange={(e) => handleChange('age', e.target.value ? parseInt(e.target.value) : '')}
               placeholder="25"
-              className={`w-full px-4 py-3 bg-slate-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.age ? 'border-red-500' : 'border-slate-600'
-              }`}
+              className={inputClass('age')}
             />
             {errors.age && <p className="text-red-400 text-sm mt-1">{errors.age}</p>}
           </div>
@@ -88,9 +90,7 @@ const PersonalInfo: React.FC = () => {
             <select
               value={data.sex}
               onChange={(e) => handleChange('sex', e.target.value)}
-              className={`w-full px-4 py-3 bg-slate-700 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.sex ? 'border-red-500' : 'border-slate-600'
-              }`}
+              className={inputClass('sex')}
             >
               <option value="">Select...</option>
               <option value="male">Male</option>
@@ -112,9 +112,7 @@ const PersonalInfo: React.FC = () => {
               value={data.height}
               onChange={(e) => handleChange('height', e.target.value ? parseInt(e.target.value) : '')}
               placeholder="180"
-              className={`w-full px-4 py-3 bg-slate-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.height ? 'border-red-500' : 'border-slate-600'
-              }`}
+              className={inputClass('height')}
             />
             {errors.height && <p className="text-red-400 text-sm mt-1">{errors.height}</p>}
           </div>
@@ -128,9 +126,7 @@ const PersonalInfo: React.FC = () => {
               value={data.weight}
               onChange={(e) => handleChange('weight', e.target.value ? parseInt(e.target.value) : '')}
               placeholder="75"
-              className={`w-full px-4 py-3 bg-slate-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.weight ? 'border-red-500' : 'border-slate-600'
-              }`}
+              className={inputClass('weight')}
             />
             {errors.weight && <p className="text-red-400 text-sm mt-1">{errors.weight}</p>}
           </div>
@@ -145,9 +141,7 @@ const PersonalInfo: React.FC = () => {
             type="date"
             value={data.dateOfBirth}
             onChange={(e) => handleChange('dateOfBirth', e.target.value)}
-            className={`w-full px-4 py-3 bg-slate-700 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-              errors.dateOfBirth ? 'border-red-500' : 'border-slate-600'
-            }`}
+            className={inputClass('dateOfBirth')}
           />
           {errors.dateOfBirth && <p className="text-red-400 text-sm mt-1">{errors.dateOfBirth}</p>}
         </div>
