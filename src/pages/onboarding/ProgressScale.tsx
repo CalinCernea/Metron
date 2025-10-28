@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useOnboarding } from '../../context/OnboardingContext'
 import OnboardingLayout from '../../components/OnboardingLayout'
+import { CheckCircleIcon, ArrowDownCircleIcon, ArrowUpCircleIcon, BoltIcon } from '@heroicons/react/24/solid'
 
 const ProgressScale: React.FC = () => {
   const navigate = useNavigate()
@@ -12,30 +13,36 @@ const ProgressScale: React.FC = () => {
     {
       id: 'lose_weight',
       label: 'Lose Weight',
-      icon: '⬇️',
+      icon: ArrowDownCircleIcon,
       description: 'How many kg per week do you want to lose?',
       range: { min: 0.25, max: 1.5, step: 0.25 },
+      unit: 'kg',
     },
     {
       id: 'gain_weight',
       label: 'Gain Weight',
-      icon: '⬆️',
+      icon: ArrowUpCircleIcon,
       description: 'How many kg per week do you want to gain?',
       range: { min: 0.25, max: 1.5, step: 0.25 },
+      unit: 'kg',
     },
     {
       id: 'gain_muscle',
       label: 'Gain Muscle',
-      icon: '💪',
+      icon: BoltIcon,
       description: 'How many kg of muscle per week do you want to gain?',
-      range: { min: 0.25, max: 1, step: 0.25 },
+      range: { min: 0.1, max: 0.5, step: 0.1 }, // Adjusted range for muscle gain
+      unit: 'kg',
     },
   ]
 
   const selectedGoal = progressGoals.find((g) => g.id === data.weeklyProgressGoal)
 
   const handleGoalSelect = (goal: string) => {
-    updateData({ weeklyProgressGoal: goal as any, progressAmount: '' })
+    // Reset amount when goal changes, setting it to the minimum of the new range
+    const newGoal = progressGoals.find(g => g.id === goal)
+    const newAmount = newGoal ? newGoal.range.min : 0
+    updateData({ weeklyProgressGoal: goal as any, progressAmount: newAmount })
     if (errors.weeklyProgressGoal) {
       setErrors({ ...errors, weeklyProgressGoal: '' })
     }
@@ -51,8 +58,8 @@ const ProgressScale: React.FC = () => {
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {}
 
-    if (!data.weeklyProgressGoal) newErrors.weeklyProgressGoal = 'Please select a progress goal'
-    if (!data.progressAmount) newErrors.progressAmount = 'Please select the amount'
+    if (!data.weeklyProgressGoal) newErrors.weeklyProgressGoal = 'Please select a progress goal.'
+    if (!data.progressAmount || data.progressAmount <= 0) newErrors.progressAmount = 'Please select the amount.'
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -64,57 +71,70 @@ const ProgressScale: React.FC = () => {
     }
   }
 
+  const isNextDisabled = !data.weeklyProgressGoal || !data.progressAmount || data.progressAmount <= 0
+
+  // Utility function to generate quick-select amounts
+  const getQuickSelectAmounts = (range: { min: number, max: number, step: number }) => {
+    const amounts: number[] = []
+    for (let i = range.min; i <= range.max; i += range.step) {
+      amounts.push(parseFloat(i.toFixed(2))) // Fix floating point issues
+    }
+    return amounts
+  }
+
   return (
     <OnboardingLayout
       step={7}
       totalSteps={7}
       title="Progress Scale"
-      subtitle="Set your weekly progress goals"
+      subtitle="Set your weekly progress goals. We will adjust your plan accordingly."
       onNext={handleNext}
       onBack={() => navigate('/onboarding/dietary-restrictions')}
       nextButtonText="Review Summary"
+      isNextDisabled={isNextDisabled}
     >
       <div className="space-y-8">
         {/* Goal Selection */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4">What's your main progress goal?</h3>
-          <div className="space-y-3">
-            {progressGoals.map((goal) => (
-              <button
-                key={goal.id}
-                onClick={() => handleGoalSelect(goal.id)}
-                className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left ${
-                  data.weeklyProgressGoal === goal.id
-                    ? 'border-blue-500 bg-blue-500 bg-opacity-10'
-                    : 'border-slate-600 hover:border-slate-500'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl">{goal.icon}</span>
-                    <h4 className="font-semibold text-white">{goal.label}</h4>
-                  </div>
-                  {data.weeklyProgressGoal === goal.id && (
-                    <svg className="h-6 w-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
+          <h3 className="text-xl font-semibold text-white mb-4 border-b border-gray-700 pb-2">What's your main progress goal?</h3>
+          <div className="grid grid-cols-3 gap-3">
+            {progressGoals.map((goal) => {
+              const isSelected = data.weeklyProgressGoal === goal.id
+              const IconComponent = goal.icon
+              return (
+                <button
+                  key={goal.id}
+                  onClick={() => handleGoalSelect(goal.id)}
+                  className={`p-4 rounded-xl border-2 transition-all duration-200 text-left flex flex-col items-center justify-center h-full ${
+                    isSelected
+                      ? 'border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/20'
+                      : 'border-gray-700 bg-gray-700/50 hover:bg-gray-700/80'
+                  }`}
+                >
+                  <IconComponent className={`h-8 w-8 mb-2 ${isSelected ? 'text-blue-400' : 'text-gray-400'}`} />
+                  <h4 className="font-bold text-white text-sm text-center">{goal.label}</h4>
+                  {isSelected && (
+                    <div className="absolute top-2 right-2">
+                      <CheckCircleIcon className="h-5 w-5 text-blue-500" />
+                    </div>
                   )}
-                </div>
-              </button>
-            ))}
+                </button>
+              )
+            })}
           </div>
-          {errors.weeklyProgressGoal && <p className="text-red-400 text-sm mt-2">{errors.weeklyProgressGoal}</p>}
+          {errors.weeklyProgressGoal && <p className="text-red-400 text-sm mt-4">{errors.weeklyProgressGoal}</p>}
         </div>
 
         {/* Amount Selection */}
         {selectedGoal && (
           <div>
-            <h3 className="text-lg font-semibold text-white mb-2">{selectedGoal.description}</h3>
-            <p className="text-gray-400 text-sm mb-4">
-              {data.progressAmount ? `You selected: ${data.progressAmount} kg/week` : 'Slide to select'}
-            </p>
+            <h3 className="text-xl font-semibold text-white mb-4 border-b border-gray-700 pb-2">{selectedGoal.description}</h3>
+            
+            <div className="mb-6 p-4 bg-gray-700/50 rounded-xl border border-gray-700">
+              <p className="text-3xl font-extrabold text-center text-blue-400 mb-4">
+                {data.progressAmount ? `${data.progressAmount} ${selectedGoal.unit}/week` : 'Select Amount'}
+              </p>
 
-            <div className="space-y-4">
               {/* Slider */}
               <input
                 type="range"
@@ -123,31 +143,35 @@ const ProgressScale: React.FC = () => {
                 step={selectedGoal.range.step}
                 value={data.progressAmount || selectedGoal.range.min}
                 onChange={(e) => handleAmountChange(parseFloat(e.target.value))}
-                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
               />
+              <div className="flex justify-between text-sm text-gray-400 mt-2">
+                <span>{selectedGoal.range.min} {selectedGoal.unit}</span>
+                <span>{selectedGoal.range.max} {selectedGoal.unit}</span>
+              </div>
+            </div>
 
-              {/* Quick Select Buttons */}
-              <div className="grid grid-cols-4 gap-2">
-                {Array.from(
-                  { length: Math.floor((selectedGoal.range.max - selectedGoal.range.min) / selectedGoal.range.step) + 1 },
-                  (_, i) => selectedGoal.range.min + i * selectedGoal.range.step
-                ).map((amount) => (
+            {/* Quick Select Buttons */}
+            <div className="grid grid-cols-4 gap-2">
+              {getQuickSelectAmounts(selectedGoal.range).map((amount) => {
+                const isSelected = data.progressAmount === amount
+                return (
                   <button
                     key={amount}
                     onClick={() => handleAmountChange(amount)}
                     className={`p-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${
-                      data.progressAmount === amount
-                        ? 'border-blue-500 bg-blue-500 bg-opacity-10 text-blue-400'
-                        : 'border-slate-600 text-gray-300 hover:border-slate-500'
+                      isSelected
+                        ? 'border-blue-500 bg-blue-500/10 text-blue-400 shadow-lg shadow-blue-500/20'
+                        : 'border-gray-700 bg-gray-700/50 text-gray-300 hover:bg-gray-700/80'
                     }`}
                   >
-                    {amount} kg
+                    {amount} {selectedGoal.unit}
                   </button>
-                ))}
-              </div>
+                )
+              })}
             </div>
 
-            {errors.progressAmount && <p className="text-red-400 text-sm mt-2">{errors.progressAmount}</p>}
+            {errors.progressAmount && <p className="text-red-400 text-sm mt-4">{errors.progressAmount}</p>}
           </div>
         )}
       </div>
